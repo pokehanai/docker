@@ -48,7 +48,7 @@ var mkdirp = require('mkdirp'),
   path = require('path'),
   exec = require('child_process').exec,
   spawn = require('child_process').spawn,
-  watchr = require('watchr'),
+  watch = require('watch'),
   pygmentize = require('pygmentize-bundled'),
   showdown = require('../lib/showdown').Showdown;
 
@@ -199,11 +199,13 @@ Docker.prototype.watch = function(files){
     uto = false;
   }
 
-  // Install watchr. The `null` here is a watchr bug - looks like he forgot to allow for exactly
-  // two arguments (like in his example)
-  watchr.watch({
-    path: this.inDir,
-    listener: function(){
+  // Observe this.inDir directory tree.
+  watch.watchTree(this.inDir, function (f, curr, prev) {
+    if (typeof f == 'object' && prev === null && curr === null) {
+      // ignore this callback. (called when the setup is finished)
+      return;
+    } else if (prev === null || curr.nlink !== 0) {
+      // the file is created or modified
       if(!uto) uto = setTimeout(update, 250);
     }
   });

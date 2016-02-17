@@ -5,7 +5,7 @@
   "dependencies": {
     "mkdirp": "0.3.2",
     "commander": "0.5.2",
-    "watchr": "~2.3.3",
+    "watch": "^0.17.1",
     "pygmentize-bundled": "~2.1.0"
   },
   "bin": {
